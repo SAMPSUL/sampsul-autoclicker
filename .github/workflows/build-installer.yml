@@ -34,21 +34,4 @@ jobs:
           mkdir installer-build
           copy dist\* installer-build\
           copy autoclickericon.ico installer-build\icon.ico
-        shell: cmd
-
-      - name: Copy installer script
-        run: copy installer.iss installer-build\installer.iss
-        shell: cmd
-
-      - name: Build Installer
-        working-directory: installer-build
-        run: iscc installer.iss
-        shell: cmd
-
-      - name: Upload to GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: "installer-build\\Output\\Autoclicker-Setup.exe"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+          copy installer.iss installer-build\installe
