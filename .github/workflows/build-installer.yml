@@ -1,0 +1,47 @@
+name: Build Autoclicker Installer
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build EXE
+        run: |
+          pyinstaller --noconfirm --windowed --icon autoclickericon.ico sampsul-autoclicker.pyw
+        shell: cmd
+
+      - name: Install Inno Setup
+        run: choco install innosetup --yes
+
+      - name: Copy EXE to installer directory
+        run: |
+          mkdir installer-build
+          copy dist\sampsul-autoclicker\sampsul-autoclicker.exe installer-build\autoclicker.exe
+          copy autoclickericon.ico installer-build\icon.ico
+
+      - name: Build Installer
+        run: |
+          iscc installer.iss
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "Output/Autoclicker-Setup.exe"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
