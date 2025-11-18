@@ -1,6 +1,3 @@
-; installer.iss - Inno Setup script for your Autoclicker
-; This works together with GitHub Actions workflow
-
 [Setup]
 AppName=Sampsul Autoclicker
 AppVersion=1.0
