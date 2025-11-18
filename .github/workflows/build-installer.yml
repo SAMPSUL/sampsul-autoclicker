@@ -21,27 +21,33 @@ jobs:
       - name: Install PyInstaller
         run: pip install pyinstaller
 
-      - name: Build EXE
+      - name: Build EXE with PyInstaller
         run: |
-          pyinstaller --noconfirm --windowed --icon autoclickericon.ico sampsul-autoclicker.pyw
+          python -m PyInstaller --noconfirm --windowed --icon autoclickericon.ico sampsul-autoclicker.pyw
         shell: cmd
 
       - name: Install Inno Setup
         run: choco install innosetup --yes
 
-      - name: Copy EXE to installer directory
+      - name: Prepare installer files
         run: |
           mkdir installer-build
-          copy dist\sampsul-autoclicker\sampsul-autoclicker.exe installer-build\autoclicker.exe
+          copy dist\* installer-build\
           copy autoclickericon.ico installer-build\icon.ico
+        shell: cmd
+
+      - name: Copy installer script
+        run: copy installer.iss installer-build\installer.iss
+        shell: cmd
 
       - name: Build Installer
-        run: |
-          iscc installer.iss
+        working-directory: installer-build
+        run: iscc installer.iss
+        shell: cmd
 
-      - name: Upload to Release
+      - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: "Output/Autoclicker-Setup.exe"
+          files: "installer-build\\Output\\Autoclicker-Setup.exe"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
