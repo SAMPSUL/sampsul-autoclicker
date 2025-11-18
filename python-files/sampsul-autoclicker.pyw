@@ -64,7 +64,7 @@ root.title("sampsul autoclicker")
 root.resizable(False, False)
 
 try:
-    root.iconbitmap("feather.ico")
+    root.iconbitmap("autoclickericon.ico")
 except Exception:
     pass
 
